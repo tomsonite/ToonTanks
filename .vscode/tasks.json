@@ -1,0 +1,31 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build ToonTanks (Development Editor)",
+            "type": "shell",
+            "command": "C:/Progra~1/Epic Games/UE_5.4/Engine/Build/BatchFiles/Build.bat",
+            "args": [
+                "ToonTanksEditor",
+                "Win64",
+                "Development",
+                "${workspaceFolder}/ToonTanks.uproject",
+                "-waitmutex"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Run ToonTanks in Editor",
+            "type": "shell",
+            "command": "C:/Progra~1/Epic Games/UE_5.4/Engine/Binaries/Win64/UnrealEditor.exe",
+            "args": [
+                "${workspaceFolder}/ToonTanks.uproject"
+            ],
+            "group": "none"
+        }
+    ]
+}
