@@ -33,6 +33,10 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), category = "Components")
 	USceneComponent* ProjSpawnPoint;
 
+	UPROPERTY(EditDefaultsOnly, category = "Combat")
+	TSubclassOf<class AProjectile> ProjectileClass;
+
+
 protected:
 
 	void RotateTurret(FVector LookAtTarget);
