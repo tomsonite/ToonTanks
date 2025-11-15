@@ -38,6 +38,23 @@ void ABasePawn::RotateTurret(FVector LookAtTarget)
 void ABasePawn::Fire()
 {
 	//DrawDebugSphere(GetWorld(), ProjSpawnPoint->GetComponentLocation(), 30.f, 12.f, FColor::Red, false, 3.f);
-	GetWorld()->SpawnActor<AProjectile>(ProjectileClass, ProjSpawnPoint->GetComponentLocation(), ProjSpawnPoint->GetComponentRotation());
+
+	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, ProjSpawnPoint->GetComponentLocation(), ProjSpawnPoint->GetComponentRotation());
+	Projectile->SetOwner(this);
 }
 
+void ABasePawn::HandleDestruction()
+{
+	if (DeathEffect)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DeathEffect, GetActorLocation(), GetActorRotation());
+	}
+	if (DeathSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
+	}
+	if (DeathCameraShakeClass)
+	{
+		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(DeathCameraShakeClass);
+	}
+}

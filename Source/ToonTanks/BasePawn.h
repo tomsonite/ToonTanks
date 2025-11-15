@@ -20,6 +20,8 @@ public:
 	UPROPERTY(EditInstanceOnly)
 	int32 EditInstanceOnlyInt = 10;
 
+	void HandleDestruction();
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), category = "Components")
 	class UCapsuleComponent* CapsuleComp;
@@ -36,6 +38,14 @@ private:
 	UPROPERTY(EditDefaultsOnly, category = "Combat")
 	TSubclassOf<class AProjectile> ProjectileClass;
 
+	UPROPERTY(EditAnywhere, category = "Combat")
+	class UParticleSystem* DeathEffect;
+
+	UPROPERTY(EditAnywhere, category = "Combat")
+	class USoundBase* DeathSound;
+
+	UPROPERTY(EditAnywhere, category = "Combat")
+	TSubclassOf<class UCameraShakeBase> DeathCameraShakeClass;
 
 protected:
 
