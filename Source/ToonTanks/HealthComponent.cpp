@@ -42,6 +42,7 @@ void UHealthComponent::DamageTaken(AActor* DamagedActor, float Damage, const UDa
 {
 	if (Damage <= 0.f) return;
 	Health -= Damage;
+	UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetOwner()->GetActorLocation());
 	if (Health <= 0.f && ToonTanksGameMode)
 	{
 		ToonTanksGameMode->ActorDied(DamagedActor);
