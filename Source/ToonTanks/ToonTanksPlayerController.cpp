@@ -3,15 +3,7 @@
 
 #include "ToonTanksPlayerController.h"
 
-void AToonTanksPlayerController::SetPlayerEnabledState(bool bPlayerEnabled)
+AToonTanksPlayerController::AToonTanksPlayerController()
 {
-	if (bPlayerEnabled)
-	{
-		GetPawn()->EnableInput(this);
-	}
-	else
-	{
-		GetPawn()->DisableInput(this);
-	}
-	bShowMouseCursor = bPlayerEnabled;
+	bShowMouseCursor = true;
 }

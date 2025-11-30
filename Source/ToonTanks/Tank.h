@@ -29,6 +29,12 @@ public:
 
 	bool bAlive = true;
 
+	void Pause();
+
+	void SetPlayerEnabledState(bool bPlayerEnabled);
+
+	virtual void Fire() override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -51,5 +57,7 @@ private:
 	UPROPERTY(EditAnywhere, category = "Input")
 	float TurnRate = 50.f;
 	APlayerController* TankPlayerController;
+
+	bool bInputEnabled = true;
 
 };

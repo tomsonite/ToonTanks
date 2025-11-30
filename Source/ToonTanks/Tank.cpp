@@ -5,7 +5,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
-#
+#include "Blueprint/WidgetLayoutLibrary.h"
+#include "ToonTanksGameMode.h"
 
 
 //Set Default Values
@@ -33,7 +34,7 @@ void ATank::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (TankPlayerController != nullptr)
+	if (TankPlayerController != nullptr && bInputEnabled)
 	{
 		FHitResult HitResult;
 		TankPlayerController->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
@@ -46,17 +47,43 @@ void ATank::Tick(float DeltaTime)
 
 void ATank::Move(float Value)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Value: %f"), Value);
-	FVector DeltaLocation = FVector::ZeroVector;
-	DeltaLocation.X = Value * UGameplayStatics::GetWorldDeltaSeconds(this) * MoveSpeed;
-	AddActorLocalOffset(DeltaLocation, true);
+	if (bInputEnabled)
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("Value: %f"), Value);
+		FVector DeltaLocation = FVector::ZeroVector;
+		DeltaLocation.X = Value * UGameplayStatics::GetWorldDeltaSeconds(this) * MoveSpeed;
+		AddActorLocalOffset(DeltaLocation, true);
+	}
 }
 
 void ATank::Rotate(float Value)
 {
-	FRotator DeltaRotation = FRotator::ZeroRotator;
-	DeltaRotation.Yaw = Value * UGameplayStatics::GetWorldDeltaSeconds(this) * TurnRate;
-	AddActorLocalRotation(DeltaRotation, true);
+	if (bInputEnabled)
+	{
+		FRotator DeltaRotation = FRotator::ZeroRotator;
+		DeltaRotation.Yaw = Value * UGameplayStatics::GetWorldDeltaSeconds(this) * TurnRate;
+		AddActorLocalRotation(DeltaRotation, true);
+	}
+}
+
+void ATank::Fire()
+{
+	if (bInputEnabled)
+	{
+		Super::Fire();
+	}
+}
+
+void ATank::Pause()
+{
+	AToonTanksGameMode* ToonTanksGameMode = GetWorld()->GetAuthGameMode<AToonTanksGameMode>();
+	if (ToonTanksGameMode && ToonTanksGameMode->bGameStarted)
+	{
+		bool bIsPaused = UGameplayStatics::IsGamePaused(this);
+		UGameplayStatics::SetGamePaused(this, !bIsPaused);
+		UWidgetLayoutLibrary::RemoveAllWidgets(this);
+		ToonTanksGameMode->PauseGame(!bIsPaused);
+	}
 }
 
 // Called to bind functionality to input
@@ -67,6 +94,8 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::Move);
 	PlayerInputComponent->BindAxis(TEXT("Turn"), this, &ATank::Rotate);
 	PlayerInputComponent->BindAction(TEXT("Fire"), IE_Pressed, this, &ATank::Fire);
+	FInputActionBinding& PauseBinding = PlayerInputComponent->BindAction(TEXT("Pause"), IE_Pressed, this, &ATank::Pause);
+	PauseBinding.bExecuteWhenPaused = true;
 }
 
 void ATank::HandleDestruction()
@@ -77,3 +106,7 @@ void ATank::HandleDestruction()
 	bAlive = false;
 }
 
+void ATank::SetPlayerEnabledState(bool bPlayerEnabled)
+{
+	bInputEnabled = bPlayerEnabled;
+}

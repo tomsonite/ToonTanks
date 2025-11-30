@@ -18,15 +18,26 @@ public:
 	
 	void ActorDied(AActor* DeadActor);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void PauseGame(bool bPauseGame);
+
+	bool bGameStarted = false;
+
 protected:
 
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void StartGame();
+	void CreateCountdownWidget();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void GameOver(bool bWonGame);
+
+	UFUNCTION(BlueprintCallable)
+	void HandleGameStart();
+
+	UFUNCTION(BlueprintCallable)
+	void ResumeGame();
 
 private:
 
@@ -36,8 +47,8 @@ private:
 
 	float StartDelay = 4.f;
 
-	void HandleGameStart();
-
 	int32 TargetTowers = 0;
 	int32 GetTargetTowerCount();
+
+	void StartGame();
 };
